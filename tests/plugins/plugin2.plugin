@@ -1,0 +1,7 @@
+[Core]
+Name = Plugin 2
+Module = plugin2
+
+# Purposefully commented to test for KeyErrors
+# [Config]
+# Enable = False
