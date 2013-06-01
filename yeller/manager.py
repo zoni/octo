@@ -1,7 +1,7 @@
 from yapsy.PluginManager import PluginManager
 
 
-class Yeller(object):
+class Manager(object):
 	"""
 	This is the main ``yeller`` application class.
 	"""
