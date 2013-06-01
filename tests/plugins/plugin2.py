@@ -1,4 +1,4 @@
-from yeller.plugin import YellerPlugin
+from octo.plugin import OctoPlugin
 
-class PluginTwo(YellerPlugin):
+class PluginTwo(OctoPlugin):
 	pass

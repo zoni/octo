@@ -3,7 +3,7 @@ from yapsy.PluginManager import PluginManager
 
 class Manager(object):
 	"""
-	This is the main ``yeller`` application class.
+	This is the main ``octo`` application class.
 	"""
 
 	def __init__(self, plugin_dirs=[]):
