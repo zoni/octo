@@ -58,10 +58,13 @@ class Manager(object):
 
 	def get_plugins(self, include_inactive=False):
 		"""
-		Return a list of loaded plugins
+		Return a dictionary of loaded plugins
 
-		When ``include_inactive`` is True, return all plugins, else return
-		only activated plugins.
+		Keys will consist of plugin names, with their values being the plugin
+		instances (yapsy.PluginInfo.PluginInfo objects).
+
+		When ``include_inactive`` is True, all collected plugins will be
+		returned, otherwise only the activated plugins will be returned.
 		"""
 		if include_inactive:
 			plugins = self.plugin_manager.getAllPlugins()
