@@ -52,7 +52,7 @@ class Manager(object):
 	"""
 
 	def __init__(self, plugin_dirs=[]):
-		logging.info("Initializing with plugin directories {!r}".format(plugin_dirs))
+		logging.info("Initializing with plugin directories: {!r}".format(plugin_dirs))
 		self.plugin_manager = PluginManager(directories_list=plugin_dirs, plugin_info_ext='plugin')
 		self.plugin_manager.collectPlugins()
 
