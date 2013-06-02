@@ -5,7 +5,7 @@ from octo import Manager
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
 
-class BaseTests(unittest.TestCase):
+class ManagerTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
 		app = Manager()
 		self.assertEqual(len(app.plugin_manager.getAllPlugins()), 0)
@@ -20,7 +20,6 @@ class BaseTests(unittest.TestCase):
 		for plugin in app.plugin_manager.getAllPlugins():
 			if plugin.is_activated:
 				enabled += 1
-
 		self.assertEqual(enabled, 1)
 
 	def test_manager_get_plugins_returns_one_active(self):
