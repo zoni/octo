@@ -73,6 +73,22 @@ class Manager(object):
 			           if hasattr(plugin, 'is_activated') and plugin.is_activated]
 		return dict(zip([plugin.name for plugin in plugins], plugins))
 
+	def activate_plugin(self, plugin_name):
+		"""
+		Activate the given plugin
+
+		plugin_name should be the name of the plugin to be activated.
+		"""
+		self.plugin_manager.activatePluginByName(plugin_name)
+
+	def deactivate_plugin(self, plugin_name):
+		"""
+		Deactivate the given plugin
+
+		plugin_name should be the name of the plugin to be deactivated.
+		"""
+		self.plugin_manager.deactivatePluginByName(plugin_name)
+
 	def start(self):
 		"""Start and activate collected plugins
 
@@ -85,7 +101,7 @@ class Manager(object):
 				should_activate = False
 			if should_activate:
 				logging.debug("Activating plugin {}".format(plugin.name))
-				self.plugin_manager.activatePluginByName(plugin.name)
+				self.activate_plugin(plugin.name)
 			else:
 				logging.debug("Plugin {} not activated because config item Enable "
 							  "is not True".format(plugin.name))
@@ -95,6 +111,6 @@ class Manager(object):
 		"""Stop and deactivate loaded plugins"""
 		for plugin in self.get_plugins().values():
 			logging.debug("Deactivating plugin {}".format(plugin.name))
-			self.plugin_manager.deactivatePluginByName(plugin.name)
+			self.deactivate_plugin(plugin.name)
 		return self
 

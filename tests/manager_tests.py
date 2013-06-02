@@ -1,18 +1,47 @@
 import unittest
 import octo
+import octo.plugin
 import octo.exceptions
 import os
 import signal
 import yapsy
 from nose.tools import raises
-from mock import patch
+from mock import patch, MagicMock, create_autospec, call
 
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
 
-class ManagerTests(unittest.TestCase):
+def mockplugin(name="Mock plugin", enable=True):
+	plugin = create_autospec(octo.plugin.OctoPlugin)
+	plugin.name = name
+	plugin.is_activated = False
+	plugin.details = {'Config': {}}
+	plugin.details['Config']['Enable'] = enable
+	return plugin
+
+
+class PluginMocksMixin(object):
+	def mock_enable_plugin(self, name):
+		for plugin in self.mock_plugin_list:
+			if plugin.name == name:
+				plugin.is_activated = True
+
+	def mock_disable_plugin(self, name):
+		for plugin in self.mock_plugin_list:
+			if plugin.name == name:
+				plugin.is_activated = False
+
+	def mock_getPluginByName(self, name):
+		for plugin in self.mock_plugin_list:
+			if plugin.name == name:
+				return plugin
+
+
+class ManagerTests(unittest.TestCase, PluginMocksMixin):
 	def setUp(self):
 		octo.instance = None
+		self.mock_plugin_list = [mockplugin('Plugin 1'),
+		                         mockplugin('Plugin 2', enable=False)]
 
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
 		manager = octo.Manager().start()
@@ -45,6 +74,22 @@ class ManagerTests(unittest.TestCase):
 		self.assertTrue('Plugin 2' in plugins.keys())
 		self.assertTrue(isinstance(plugins['Plugin 1'], yapsy.PluginInfo.PluginInfo))
 		self.assertTrue(isinstance(plugins['Plugin 2'], yapsy.PluginInfo.PluginInfo))
+
+	def test_manager_start_calls_activate(self):
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(manager.plugin_manager, 'activatePluginByName') as mock_method:
+			manager.start()
+		self.assertEqual(mock_method.mock_calls, [call('Plugin 1')])
+
+	def test_manager_start_calls_deactivate(self):
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(octo.Manager, 'activate_plugin', new_callable=lambda: self.mock_enable_plugin) as mock_method_1:
+			manager.start()
+		with patch.object(manager.plugin_manager, 'deactivatePluginByName') as mock_method_2:
+			manager.stop()
+		self.assertEqual(mock_method_2.mock_calls, [call('Plugin 1')])
 
 	def test_start_initializes_manager(self):
 		octo.start(plugin_dirs=[])
