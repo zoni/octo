@@ -36,18 +36,18 @@ class ManagerTests(unittest.TestCase):
 		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR])
 		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
 
-	def test_main_initializes_manager(self):
-		octo.main(plugin_dirs=[])
+	def test_start_initializes_manager(self):
+		octo.start(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
 
 	@raises(Exception)
-	def test_main_raises_exception_when_called_twice(self):
-		octo.main(plugin_dirs=[])
-		octo.main(plugin_dirs=[])
+	def test_start_raises_exception_when_called_twice(self):
+		octo.start(plugin_dirs=[])
+		octo.start(plugin_dirs=[])
 
 	@patch('signal.signal')
 	@patch('signal.pause')
-	def test_main_can_block_until_sigint_received(self, pause_mock, signal_mock):
-		octo.main(plugin_dirs=[], block=True)
+	def test_start_can_block_until_sigint_received(self, pause_mock, signal_mock):
+		octo.start(plugin_dirs=[], block=True)
 		signal_mock.assert_called_with(signal.SIGINT, octo.manager.exit_handler)
 		self.assertTrue(pause_mock.called)

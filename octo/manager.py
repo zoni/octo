@@ -9,7 +9,7 @@ def exit_handler(signal, frame):
 	logging.info("Interrupt received, shutting down")
 
 
-def main(plugin_dirs=[], block=False):
+def start(plugin_dirs=[], block=False):
 	"""
 	Starts the ``octo`` application.
 
