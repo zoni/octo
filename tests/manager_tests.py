@@ -52,28 +52,38 @@ class ManagerTests(unittest.TestCase, PluginMocksMixin):
 		self.assertEqual(len(manager.plugin_manager.getAllPlugins()), 2)
 
 	def test_manager_enables_only_enabled_plugins(self):
-		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(octo.Manager, 'activate_plugin', new_callable=lambda: self.mock_enable_plugin) as mock_method_1:
+			manager.start()
 		enabled = 0
-		for plugin in manager.plugin_manager.getAllPlugins():
+		for plugin in manager.get_plugins().values():
 			if plugin.is_activated:
 				enabled += 1
 		self.assertEqual(enabled, 1)
 
 	def test_manager_get_plugins_returns_one_active(self):
-		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(octo.Manager, 'activate_plugin', new_callable=lambda: self.mock_enable_plugin) as mock_method_1:
+			manager.start()
 		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 1)
 
 	def test_manager_get_plugins_returns_two_total(self):
-		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(octo.Manager, 'activate_plugin', new_callable=lambda: self.mock_enable_plugin) as mock_method_1:
+			manager.start()
 		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
 
 	def test_manager_get_plugins_returns_plugins_as_name_pluginobject_dict(self):
-		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		manager = octo.Manager()
+		manager.plugin_manager.getAllPlugins = lambda: self.mock_plugin_list
+		with patch.object(octo.Manager, 'activate_plugin', new_callable=lambda: self.mock_enable_plugin) as mock_method_1:
+			manager.start()
 		plugins = manager.get_plugins(include_inactive=True)
 		self.assertTrue('Plugin 1' in plugins.keys())
 		self.assertTrue('Plugin 2' in plugins.keys())
-		self.assertTrue(isinstance(plugins['Plugin 1'], yapsy.PluginInfo.PluginInfo))
-		self.assertTrue(isinstance(plugins['Plugin 2'], yapsy.PluginInfo.PluginInfo))
 
 	def test_manager_start_calls_activate(self):
 		manager = octo.Manager()
