@@ -75,7 +75,7 @@ class Manager(object):
 
 		A plugin will be activated when it has a config item 'Enable'
 		under the section 'Config' with a value of True"""
-		for plugin in self.plugin_manager.getAllPlugins():
+		for plugin in self.get_plugins(include_inactive=True).values():
 			try:
 				should_activate = plugin.details['Config']['Enable']
 			except KeyError:
