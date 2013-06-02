@@ -22,3 +22,4 @@ if __name__ == "__main__":
 		logging.basicConfig(level=getattr(logging, log_level))
 
 	octo.start(plugin_dirs=args.plugin_dir, block=True)
+	octo.stop()

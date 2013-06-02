@@ -1,3 +1,3 @@
-from .manager import Manager, start
+from .manager import Manager, start, stop
 
 instance = None
