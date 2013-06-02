@@ -1,1 +1,3 @@
-from .manager import Manager
+from .manager import Manager, main
+
+instance = None

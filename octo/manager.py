@@ -1,9 +1,40 @@
+import octo
+import signal
+import logging
 from yapsy.PluginManager import PluginManager
+
+
+def exit_handler(signal, frame):
+	"""Called by `main` upon receiving SIGINT"""
+	logging.info("Interrupt received, shutting down")
+
+
+def main(plugin_dirs=[], block=False):
+	"""
+	Starts the ``octo`` application.
+
+	Calling this function will initialize the `Manager` class and make it
+	available as `octo.instance` so that plugins may import and interact with
+	it.
+
+	If block=True, this function will block until a SIGINT is received, either
+	by the user hitting Ctrl+C or another process sending a SIGINT signal.
+	"""
+	if octo.instance is not None:
+		raise Exception("main() can only be called once")
+	octo.instance = Manager(plugin_dirs=plugin_dirs)
+	if block:
+		signal.signal(signal.SIGINT, exit_handler)
+		signal.pause()
 
 
 class Manager(object):
 	"""
 	This is the main ``octo`` application class.
+
+	Normally, you would call `octo.main` instead of creating an instance of this
+	class directly, as `octo.main` will make it available globally as `octo.instance`
+	so plugins may interact with it.
 	"""
 
 	def __init__(self, plugin_dirs=[]):

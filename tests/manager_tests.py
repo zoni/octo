@@ -1,31 +1,53 @@
 import unittest
+import octo
 import os
-from octo import Manager
+import signal
+from nose.tools import raises
+from mock import patch
 
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
 
 class ManagerTests(unittest.TestCase):
+	def setUp(self):
+		octo.instance = None
+
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
-		app = Manager()
-		self.assertEqual(len(app.plugin_manager.getAllPlugins()), 0)
+		manager = octo.Manager()
+		self.assertEqual(len(manager.plugin_manager.getAllPlugins()), 0)
 
 	def test_manager_has_two_plugins_when_pluginlist_contains_test_plugin_dir(self):
-		app = Manager(plugin_dirs=[PLUGIN_DIR])
-		self.assertEqual(len(app.plugin_manager.getAllPlugins()), 2)
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR])
+		self.assertEqual(len(manager.plugin_manager.getAllPlugins()), 2)
 
 	def test_manager_enables_only_enabled_plugins(self):
-		app = Manager(plugin_dirs=[PLUGIN_DIR])
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR])
 		enabled = 0
-		for plugin in app.plugin_manager.getAllPlugins():
+		for plugin in manager.plugin_manager.getAllPlugins():
 			if plugin.is_activated:
 				enabled += 1
 		self.assertEqual(enabled, 1)
 
 	def test_manager_get_plugins_returns_one_active(self):
-		app = Manager(plugin_dirs=[PLUGIN_DIR])
-		self.assertEqual(len(app.get_plugins(include_inactive=False)), 1)
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR])
+		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 1)
 
 	def test_manager_get_plugins_returns_two_total(self):
-		app = Manager(plugin_dirs=[PLUGIN_DIR])
-		self.assertEqual(len(app.get_plugins(include_inactive=True)), 2)
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR])
+		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
+
+	def test_main_initializes_manager(self):
+		octo.main(plugin_dirs=[])
+		self.assertTrue(isinstance(octo.instance, octo.Manager))
+
+	@raises(Exception)
+	def test_main_raises_exception_when_called_twice(self):
+		octo.main(plugin_dirs=[])
+		octo.main(plugin_dirs=[])
+
+	@patch('signal.signal')
+	@patch('signal.pause')
+	def test_main_can_block_until_sigint_received(self, pause_mock, signal_mock):
+		octo.main(plugin_dirs=[], block=True)
+		signal_mock.assert_called_with(signal.SIGINT, octo.manager.exit_handler)
+		self.assertTrue(pause_mock.called)
