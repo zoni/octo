@@ -60,6 +60,10 @@ class ManagerTests(unittest.TestCase):
 		self.assertEqual(octo.instance, None)
 
 	@raises(octo.exceptions.NotStartedError)
+	def test_stop_raises_exception_when_called_before_start(self):
+		octo.stop()
+
+	@raises(octo.exceptions.NotStartedError)
 	def test_stop_raises_exception_when_called_twice(self):
 		octo.start(plugin_dirs=[])
 		octo.stop()
