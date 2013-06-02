@@ -42,13 +42,18 @@ class Manager(object):
 		self.plugin_manager = plugin_manager
 
 		plugin_manager.collectPlugins()
+		logging.info("Intializing with plugin directories {!r}".format(plugin_dirs))
 		for plugin in plugin_manager.getAllPlugins():
 			try:
 				should_activate = plugin.details['Config']['Enable']
 			except KeyError:
 				should_activate = False
 			if should_activate:
+				logging.debug("Activating plugin {}".format(plugin.name))
 				plugin_manager.activatePluginByName(plugin.name)
+			else:
+				logging.debug("Plugin {} not activated because config item Enable "
+				              "is not True".format(plugin.name))
 
 	def get_plugins(self, include_inactive=False):
 		"""
