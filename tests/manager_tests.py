@@ -1,5 +1,6 @@
 import unittest
 import octo
+import octo.exceptions
 import os
 import signal
 from nose.tools import raises
@@ -40,7 +41,7 @@ class ManagerTests(unittest.TestCase):
 		octo.start(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
 
-	@raises(Exception)
+	@raises(octo.exceptions.AlreadyStartedError)
 	def test_start_raises_exception_when_called_twice(self):
 		octo.start(plugin_dirs=[])
 		octo.start(plugin_dirs=[])
@@ -58,7 +59,7 @@ class ManagerTests(unittest.TestCase):
 		octo.stop()
 		self.assertEqual(octo.instance, None)
 
-	@raises(Exception)
+	@raises(octo.exceptions.NotStartedError)
 	def test_stop_raises_exception_when_called_twice(self):
 		octo.start(plugin_dirs=[])
 		octo.stop()

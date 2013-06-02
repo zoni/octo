@@ -1,4 +1,5 @@
 import octo
+import octo.exceptions
 import signal
 import logging
 from yapsy.PluginManager import PluginManager
@@ -21,7 +22,7 @@ def start(plugin_dirs=[], block=False):
 	by the user hitting Ctrl+C or another process sending a SIGINT signal.
 	"""
 	if octo.instance is not None:
-		raise Exception("main() can only be called once")
+		raise octo.exceptions.AlreadyStartedError("main() can only be called once")
 	octo.instance = Manager(plugin_dirs=plugin_dirs)
 	octo.instance.start()
 	if block:
@@ -35,6 +36,8 @@ def stop():
 
 	Calling this function will stop and cleanup `octo.instance`
 	"""
+	if octo.instance is None:
+		raise octo.exceptions.NotStartedError("Octo does not seem to be started")
 	octo.instance.stop()
 	octo.instance = None
 
