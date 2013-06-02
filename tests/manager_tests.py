@@ -3,6 +3,7 @@ import octo
 import octo.exceptions
 import os
 import signal
+import yapsy
 from nose.tools import raises
 from mock import patch
 
@@ -37,6 +38,14 @@ class ManagerTests(unittest.TestCase):
 		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
 		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
 
+	def test_manager_get_plugins_returns_plugins_as_name_pluginobject_dict(self):
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		plugins = manager.get_plugins(include_inactive=True)
+		self.assertTrue('Plugin 1' in plugins.keys())
+		self.assertTrue('Plugin 2' in plugins.keys())
+		self.assertTrue(isinstance(plugins['Plugin 1'], yapsy.PluginInfo.PluginInfo))
+		self.assertTrue(isinstance(plugins['Plugin 2'], yapsy.PluginInfo.PluginInfo))
+
 	def test_start_initializes_manager(self):
 		octo.start(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
@@ -58,6 +67,10 @@ class ManagerTests(unittest.TestCase):
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
 		octo.stop()
 		self.assertEqual(octo.instance, None)
+
+	def test_start_and_stop_sequence_with_plugins(self):
+		octo.start(plugin_dirs=[PLUGIN_DIR])
+		octo.stop()
 
 	@raises(octo.exceptions.NotStartedError)
 	def test_stop_raises_exception_when_called_before_start(self):

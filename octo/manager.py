@@ -64,10 +64,11 @@ class Manager(object):
 		only activated plugins.
 		"""
 		if include_inactive:
-			return self.plugin_manager.getAllPlugins()
+			plugins = self.plugin_manager.getAllPlugins()
 		else:
-			return [plugin for plugin in self.plugin_manager.getAllPlugins()
-			        if hasattr(plugin, 'is_activated') and plugin.is_activated]
+			plugins = [plugin for plugin in self.plugin_manager.getAllPlugins()
+			           if hasattr(plugin, 'is_activated') and plugin.is_activated]
+		return dict(zip([plugin.name for plugin in plugins], plugins))
 
 	def start(self):
 		"""Start and activate collected plugins
@@ -89,7 +90,7 @@ class Manager(object):
 
 	def stop(self):
 		"""Stop and deactivate loaded plugins"""
-		for plugin in self.get_plugins():
+		for plugin in self.get_plugins().values():
 			logging.debug("Deactivating plugin {}".format(plugin.name))
 			self.plugin_manager.deactivatePluginByName(plugin.name)
 		return self
