@@ -145,8 +145,12 @@ class ManagerTests(unittest.TestCase):
 class ManagerIntegrationTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
 		manager = octo.Manager().start()
-		self.assertEqual(len(manager.plugin_manager.getAllPlugins()), 0)
+		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 0)
 
-	def test_manager_has_two_plugins_when_pluginlist_contains_test_plugin_dir(self):
+	def test_manager_get_plugins_returns_one_active(self):
 		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
-		self.assertEqual(len(manager.plugin_manager.getAllPlugins()), 2)
+		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 1)
+
+	def test_manager_get_plugins_returns_two_total(self):
+		manager = octo.Manager(plugin_dirs=[PLUGIN_DIR]).start()
+		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
