@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>octo Package &mdash; Octo 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Octo 0.1 documentation" href="index.html" />
+    <link rel="up" title="octo" href="modules.html" />
+    <link rel="prev" title="octo" href="modules.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="octo"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Octo 0.1 documentation</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">octo</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="octo-package">
+<h1>octo Package<a class="headerlink" href="#octo-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">octo</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-octo.__init__"></span><p>A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins.</p>
+</div>
+<div class="section" id="module-octo.exceptions">
+<span id="exceptions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">exceptions</span></tt> Module<a class="headerlink" href="#module-octo.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="octo.exceptions.AlreadyStartedError">
+<em class="property">exception </em><tt class="descclassname">octo.exceptions.</tt><tt class="descname">AlreadyStartedError</tt><a class="reference internal" href="_modules/octo/exceptions.html#AlreadyStartedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.exceptions.AlreadyStartedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#octo.exceptions.OctoException" title="octo.exceptions.OctoException"><tt class="xref py py-class docutils literal"><span class="pre">octo.exceptions.OctoException</span></tt></a></p>
+<p>Raised when trying to call octo.start more than once</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octo.exceptions.NotStartedError">
+<em class="property">exception </em><tt class="descclassname">octo.exceptions.</tt><tt class="descname">NotStartedError</tt><a class="reference internal" href="_modules/octo/exceptions.html#NotStartedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.exceptions.NotStartedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#octo.exceptions.OctoException" title="octo.exceptions.OctoException"><tt class="xref py py-class docutils literal"><span class="pre">octo.exceptions.OctoException</span></tt></a></p>
+<p>Raised when trying to call octo.stop before octo.start</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octo.exceptions.OctoException">
+<em class="property">exception </em><tt class="descclassname">octo.exceptions.</tt><tt class="descname">OctoException</tt><a class="reference internal" href="_modules/octo/exceptions.html#OctoException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.exceptions.OctoException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.Exception</span></tt></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-octo.manager">
+<span id="manager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">manager</span></tt> Module<a class="headerlink" href="#module-octo.manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octo.manager.Manager">
+<em class="property">class </em><tt class="descclassname">octo.manager.</tt><tt class="descname">Manager</tt><big>(</big><em>plugin_dirs=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
+<p>This is the main <tt class="docutils literal"><span class="pre">octo</span></tt> application class.</p>
+<p>Normally, you would call <cite>octo.main</cite> instead of creating an instance of this
+class directly, as <cite>octo.main</cite> will make it available globally as <cite>octo.instance</cite>
+so plugins may interact with it.</p>
+<dl class="method">
+<dt id="octo.manager.Manager.activate_plugin">
+<tt class="descname">activate_plugin</tt><big>(</big><em>plugin_name</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.activate_plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.activate_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Activate the given plugin</p>
+<p>plugin_name should be the name of the plugin to be activated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.call">
+<tt class="descname">call</tt><big>(</big><em>func</em>, <em>args</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the given function on all active plugins and return results as a dictionary</p>
+<p>The returned dictionary will have the form of {&#8216;plugin name&#8217;: &lt;function_result&gt;}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.deactivate_plugin">
+<tt class="descname">deactivate_plugin</tt><big>(</big><em>plugin_name</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.deactivate_plugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.deactivate_plugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deactivate the given plugin</p>
+<p>plugin_name should be the name of the plugin to be deactivated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.get_plugins">
+<tt class="descname">get_plugins</tt><big>(</big><em>include_inactive=False</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.get_plugins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.get_plugins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of loaded plugins</p>
+<p>Keys will consist of plugin names, with their values being the plugin
+instances (yapsy.PluginInfo.PluginInfo objects).</p>
+<p>When <tt class="docutils literal"><span class="pre">include_inactive</span></tt> is True, all collected plugins will be
+returned, otherwise only the activated plugins will be returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.start">
+<tt class="descname">start</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start and activate collected plugins</p>
+<p>A plugin will be activated when it has a config item &#8216;Enable&#8217;
+under the section &#8216;Config&#8217; with a value of True</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.stop">
+<tt class="descname">stop</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop and deactivate loaded plugins</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="octo.manager.exit_handler">
+<tt class="descclassname">octo.manager.</tt><tt class="descname">exit_handler</tt><big>(</big><em>signal</em>, <em>frame</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#exit_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.exit_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by <cite>run</cite> upon receiving SIGINT</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="octo.manager.run">
+<tt class="descclassname">octo.manager.</tt><tt class="descname">run</tt><big>(</big><em>plugin_dirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>block=False</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the <tt class="docutils literal"><span class="pre">octo</span></tt> application.</p>
+<p>Calling this function will initialize the <cite>Manager</cite> class and make it
+available as <cite>octo.instance</cite> so that plugins may import and interact with
+it.</p>
+<p>If block=True, this function will block until a SIGINT is received, either
+by the user hitting Ctrl+C or another process sending a SIGINT signal. If
+block=False then applications must ensure to call stop() appropriately
+themselves.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="octo.manager.stop">
+<tt class="descclassname">octo.manager.</tt><tt class="descname">stop</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/manager.html#stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the <tt class="docutils literal"><span class="pre">octo</span></tt> application.</p>
+<p>Calling this function will stop and cleanup <cite>octo.instance</cite></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-octo.plugin">
+<span id="plugin-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">plugin</span></tt> Module<a class="headerlink" href="#module-octo.plugin" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="octo.plugin.OctoPlugin">
+<em class="property">class </em><tt class="descclassname">octo.plugin.</tt><tt class="descname">OctoPlugin</tt><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">yapsy.IPlugin.IPlugin</span></tt></p>
+<dl class="method">
+<dt id="octo.plugin.OctoPlugin.activate">
+<tt class="descname">activate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.activate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.activate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run plugin initialization code.</p>
+<p>Do not override this method in plugins. Instead, override the on_activation
+method instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.plugin.OctoPlugin.deactivate">
+<tt class="descname">deactivate</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.deactivate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.deactivate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run plugin de-initialization code.</p>
+<p>Do not override this method in plugins. Instead, override the on_deactivation
+method instead.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.plugin.OctoPlugin.on_activation">
+<tt class="descname">on_activation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.on_activation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.on_activation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to run code on plugin activation.</p>
+<p>This method may be safely overridden without calling Super.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.plugin.OctoPlugin.on_deactivation">
+<tt class="descname">on_deactivation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.on_deactivation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.on_deactivation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this method to run code on plugin deactivation.</p>
+<p>This method may be safely overridden without calling Super.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">octo Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">octo</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-octo.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-octo.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-octo.plugin"><tt class="docutils literal"><span class="pre">plugin</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">octo</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/octo.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="octo"
+             >previous</a> |</li>
+        <li><a href="index.html">Octo 0.1 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >octo</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nick Groenen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

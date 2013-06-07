@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Octo - A plugin framework &mdash; Octo 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Octo 0.1 documentation" href="#" />
+    <link rel="next" title="octo" href="modules.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="octo"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Octo 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="octo-a-plugin-framework">
+<h1>Octo - A plugin framework<a class="headerlink" href="#octo-a-plugin-framework" title="Permalink to this headline">¶</a></h1>
+<p><em>Octo is a &#8220;plugin framework&#8221; which allows you to write your application as a
+collection of (optionally interconnected) plugins.</em></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#overview" id="id1">Overview</a></li>
+<li><a class="reference internal" href="#installing" id="id2">Installing</a></li>
+<li><a class="reference internal" href="#running-octo" id="id3">Running octo</a></li>
+<li><a class="reference internal" href="#making-an-example-plugin" id="id4">Making an example plugin</a><ul>
+<li><a class="reference internal" href="#the-application-code" id="id5">The application code</a></li>
+<li><a class="reference internal" href="#the-plugin-file" id="id6">The plugin file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-documentation" id="id7">API documentation</a></li>
+<li><a class="reference internal" href="#contributing" id="id8">Contributing</a></li>
+<li><a class="reference internal" href="#license" id="id9">License</a></li>
+<li><a class="reference internal" href="#indices-and-tables" id="id10">Indices and tables</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Octo is a &#8220;plugin framework&#8221; which allows you to write your application as a
+collection of (optionally interconnected) plugins. For example, octo makes it
+easy to write a plugin which runs a basic webserver so you can have other
+plugins hooking into that in order to expose API endpoints for various
+different tasks.</p>
+<p>Using a plugin-based approach encourages modularity and makes it easy to add or
+remove functionality, or toggle parts on and off as needed. It also makes it
+easier for people to share and exchange plugins to satisfy certain needs or to
+solve various problems.</p>
+</div>
+<div class="section" id="installing">
+<h2><a class="toc-backref" href="#id2">Installing</a><a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>Octo may be installed from PyPi using pip or easy_install:</p>
+<div class="highlight-python"><pre>pip install octo</pre>
+</div>
+<p>Alternatively, you can install the latest bleeding-edge master version from GitHub
+directly:</p>
+<div class="highlight-python"><pre>pip install https://github.com/zoni/octo/archive/master.zip</pre>
+</div>
+<p>Lastly, you could also download the code and run <tt class="docutils literal"><span class="pre">setup.py</span></tt>:</p>
+<div class="highlight-python"><pre>python setup.py install</pre>
+</div>
+<p>Note: If you wish to work on octo&#8217;s code itself, then you will want to install the
+development dependencies as well:</p>
+<div class="highlight-python"><pre>pip install -r requirements-development.txt</pre>
+</div>
+</div>
+<div class="section" id="running-octo">
+<h2><a class="toc-backref" href="#id3">Running octo</a><a class="headerlink" href="#running-octo" title="Permalink to this headline">¶</a></h2>
+<p>Starting octo is as simple as running <tt class="docutils literal"><span class="pre">octo.py</span></tt> with a list of directories
+to scan for plugins:</p>
+<div class="highlight-python"><pre>python octo.py -p plugins</pre>
+</div>
+<p>Octo will scan the directory <tt class="docutils literal"><span class="pre">plugins</span></tt> recursively, loading any configured
+plugins that it finds. If you have your plugins spread across more than a
+single directory, you can give this option multiple times:</p>
+<div class="highlight-python"><pre>python octo.py -p plugins -p more_plugins</pre>
+</div>
+<p>You can stop octo by pressing Ctrl+C, or by sending a SIGINT signal from another
+process (for example, kill).</p>
+</div>
+<div class="section" id="making-an-example-plugin">
+<h2><a class="toc-backref" href="#id4">Making an example plugin</a><a class="headerlink" href="#making-an-example-plugin" title="Permalink to this headline">¶</a></h2>
+<p>Out of the box, octo won&#8217;t be able to do much for you. It will try to activate
+any plugins it finds and then drops into an idle loop. To make it do anything
+useful, you will have to start writing plugins. Luckily, writing plugins for
+octo is really easy!</p>
+<p>To maintain tradition, lets write a simple <em>&#8220;Hello World&#8221;</em> plugin. All it will
+do is print &#8220;Hello world!&#8221; to the console when you activate it.</p>
+<p>For this example, we will assume you have an empty directory called <tt class="docutils literal"><span class="pre">example</span></tt>
+to store the plugin files in. As we&#8217;re writing a &#8220;Hello world&#8221; plugin, we&#8217;ll
+be putting our python code into <tt class="docutils literal"><span class="pre">example/helloworld.py</span></tt>.</p>
+<div class="section" id="the-application-code">
+<h3><a class="toc-backref" href="#id5">The application code</a><a class="headerlink" href="#the-application-code" title="Permalink to this headline">¶</a></h3>
+<p>In order to run, our plugin should have a class which extends
+<a class="reference internal" href="octo.html#octo.plugin.OctoPlugin" title="octo.plugin.OctoPlugin"><tt class="xref py py-class docutils literal"><span class="pre">octo.plugin.OctoPlugin</span></tt></a>. Since the name that we give to this class
+does not matter, we&#8217;ll simply call it <tt class="docutils literal"><span class="pre">HelloWorld</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">octo.plugin</span> <span class="kn">import</span> <span class="n">OctoPlugin</span>
+
+<span class="k">class</span> <span class="nc">HelloWorld</span><span class="p">(</span><span class="n">OctoPlugin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple hello world example plugin&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Obviously, this is still lacking functionality to greet, so we&#8217;ll need to
+add a method to our class for that.
+Looking at <a class="reference internal" href="octo.html#octo.plugin.OctoPlugin" title="octo.plugin.OctoPlugin"><tt class="xref py py-class docutils literal"><span class="pre">octo.plugin.OctoPlugin</span></tt></a>, you can see it already
+offers <a class="reference internal" href="octo.html#octo.plugin.OctoPlugin.on_activation" title="octo.plugin.OctoPlugin.on_activation"><tt class="xref py py-func docutils literal"><span class="pre">octo.plugin.OctoPlugin.on_activation()</span></tt></a> and
+<a class="reference internal" href="octo.html#octo.plugin.OctoPlugin.on_deactivation" title="octo.plugin.OctoPlugin.on_deactivation"><tt class="xref py py-func docutils literal"><span class="pre">octo.plugin.OctoPlugin.on_deactivation()</span></tt></a> for us to override. These two
+methods are called on activation and deactivation of a plugin, respectively.</p>
+<p>Using this, we can complete our plugin as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">octo.plugin</span> <span class="kn">import</span> <span class="n">OctoPlugin</span>
+
+<span class="k">class</span> <span class="nc">HelloWorld</span><span class="p">(</span><span class="n">OctoPlugin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple hello world example plugin&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">on_activation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Say hello on plugin activation&quot;&quot;&quot;</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Hello world!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you now try to run octo, you&#8217;ll notice  that nothing actually happens:</p>
+<div class="highlight-python"><pre>$ python octo.py -p example
+INFO:root:Initializing with plugin directories: [&#x27;example&#x27;]
+^CINFO:root:Interrupt received, shutting down</pre>
+</div>
+<p>This is because we haven&#8217;t actually told octo there&#8217;s a plugin there forit to
+load! In order to do this, we must add a plugin file that contains a bit of
+metadata about our plugin.</p>
+</div>
+<div class="section" id="the-plugin-file">
+<h3><a class="toc-backref" href="#id6">The plugin file</a><a class="headerlink" href="#the-plugin-file" title="Permalink to this headline">¶</a></h3>
+<p>Lets create <tt class="docutils literal"><span class="pre">example/helloworld.plugin</span></tt>:</p>
+<div class="highlight-python"><pre>[Core]
+Name = Hello World
+Module = helloworld
+
+[Documentation]
+Author = Your Name
+Version = 0.1
+Website = http://example.com
+Description = My first plugin
+
+[Config]
+Enable = True</pre>
+</div>
+<p>What this file does is it gives octo some metadata about your plugin, such as
+the Python module to import for it and whether to activate it or not. Make sure
+that <tt class="docutils literal"><span class="pre">Core.Module</span></tt> contains the name of the file you created for your plugin,
+as this is how it knows where to find your code.</p>
+<p>Also make sure that <tt class="docutils literal"><span class="pre">Config.Enable</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt>, if it&#8217;s anything else, or
+missing entirely, then octo won&#8217;t enable your plugin, and that would be sad.</p>
+<p>Lastly, while it&#8217;s generally a good practice, you can omit the <tt class="docutils literal"><span class="pre">Documentation</span></tt>
+items and octo won&#8217;t care. This is purely a bit of metadata that becomes
+especially useful if you end up sharing your plugin with other people.</p>
+<p>When we run octo again, this time we should see our greeting (we&#8217;ll turn all
+logging off as well, to make the output easier to read):</p>
+<div class="highlight-python"><pre>$ python octo.py -p example -l none
+Hello world!</pre>
+</div>
+<p>Success! You should now know enough to get started writing your own plugins.
+However, you&#8217;ll probably want to spend a little more time looking at the API
+documentation of <a class="reference internal" href="octo.html#octo.plugin.OctoPlugin" title="octo.plugin.OctoPlugin"><tt class="xref py py-class docutils literal"><span class="pre">octo.plugin.OctoPlugin</span></tt></a> first, so you know what
+other functionality you can hook into with your own plugins.</p>
+</div>
+</div>
+<div class="section" id="api-documentation">
+<h2><a class="toc-backref" href="#id7">API documentation</a><a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">octo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="octo.html">octo Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="octo.html#id1"><tt class="docutils literal"><span class="pre">octo</span></tt> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="octo.html#module-octo.exceptions"><tt class="docutils literal"><span class="pre">exceptions</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="octo.html#module-octo.manager"><tt class="docutils literal"><span class="pre">manager</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="octo.html#module-octo.plugin"><tt class="docutils literal"><span class="pre">plugin</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="contributing">
+<h2><a class="toc-backref" href="#id8">Contributing</a><a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>Octo is an opensource project, so I would love your involvement. Please feel free
+to offer suggestions or criticisms. If you wish to contribute code, I&#8217;d be more
+than happy to integrate your changes if I feel they make a good addition.</p>
+<p>In order to make the experience as smooth as possible, please take these
+guidelines into consideration:</p>
+<ul class="simple">
+<li>Before submitting changes, make sure all tests still pass.</li>
+<li>If you add any new code, include tests for it as well. If you need help
+writing tests, please do not hesitate to reach out to me for help.</li>
+<li>Commit any changes you make one change at a time, with a clear commit
+message to accompany it. This will ease the review process and makes it easier
+for people to figure out what happened when looking back at the git log.</li>
+<li>Split unrelated changes into seperate pull requests. This again makes
+discussion and review easier, and ensures your first change does not block your
+other changes from being accepted.</li>
+</ul>
+</div>
+<div class="section" id="license">
+<h2><a class="toc-backref" href="#id9">License</a><a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>Octo is available under a <a class="reference internal" href="license.html"><em>2-clause BSD license</em></a> (the &#8220;Simplified
+BSD License&#8221;).</p>
+</div>
+<div class="section" id="indices-and-tables">
+<h2><a class="toc-backref" href="#id10">Indices and tables</a><a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Octo - A plugin framework</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#installing">Installing</a></li>
+<li><a class="reference internal" href="#running-octo">Running octo</a></li>
+<li><a class="reference internal" href="#making-an-example-plugin">Making an example plugin</a><ul>
+<li><a class="reference internal" href="#the-application-code">The application code</a></li>
+<li><a class="reference internal" href="#the-plugin-file">The plugin file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-documentation">API documentation</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">octo</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="octo"
+             >next</a> |</li>
+        <li><a href="#">Octo 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Nick Groenen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
