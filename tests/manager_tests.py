@@ -7,6 +7,10 @@ import signal
 import yapsy
 from nose.tools import raises
 from mock import patch, Mock, MagicMock, create_autospec, call
+try:
+	from configparser import ConfigParser
+except ImportError:
+	from ConfigParser import SafeConfigParser as ConfigParser  # Python 2
 
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
@@ -16,8 +20,9 @@ def mockplugin(name="Mock plugin", enable=True, omit_callback=False):
 	plugin = create_autospec(octo.plugin.OctoPlugin)
 	plugin.name = name
 	plugin.is_activated = False
-	plugin.details = {'Config': {}}
-	plugin.details['Config']['Enable'] = enable
+	plugin.details = ConfigParser()
+	plugin.details.add_section('Config')
+	plugin.details.set('Config', 'Enable', str(enable))
 	if not omit_callback:
 		plugin.callback = MagicMock(return_value="Called")
 	return plugin

@@ -3,7 +3,10 @@ import octo.exceptions
 import signal
 import logging
 from yapsy.PluginManager import PluginManager
-
+try:
+	import configparser
+except ImportError:
+	import ConfigParser as configparser  # Python 2
 
 def exit_handler(signal, frame):
 	"""Called by `run` upon receiving SIGINT"""
@@ -114,8 +117,8 @@ class Manager(object):
 		under the section 'Config' with a value of True"""
 		for plugin in self.get_plugins(include_inactive=True).values():
 			try:
-				should_activate = plugin.details['Config']['Enable']
-			except KeyError:
+				should_activate = plugin.details.getboolean('Config', 'Enable')
+			except configparser.NoSectionError:
 				should_activate = False
 			if should_activate:
 				logging.debug("Activating plugin {}".format(plugin.name))
