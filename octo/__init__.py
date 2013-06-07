@@ -20,6 +20,13 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins."""
+
+__author__ = "Nick Groenen"
+__version__ = "0.1"
+__email__ = "zoni@zoni.nl"
+__url__ = "http://octo.zoni.nl"
+
 from .manager import Manager, run, stop
 
 instance = None

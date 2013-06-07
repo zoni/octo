@@ -1,15 +1,9 @@
-.. Octo documentation master file, created by
-   sphinx-quickstart on Wed Jun  5 20:30:33 2013.
-
 =========================
 Octo - A plugin framework
 =========================
 
 *Octo is a "plugin framework" which allows you to write your application as a
 collection of (optionally interconnected) plugins.*
-
-.. contents:: 
-   :local: 
 
 Overview
 --------
@@ -82,7 +76,7 @@ The application code
 ====================
 
 In order to run, our plugin should have a class which extends
-:class:`octo.plugin.OctoPlugin`. Since the name that we give to this class
+``octo.plugin.OctoPlugin``. Since the name that we give to this class
 does not matter, we'll simply call it ``HelloWorld``::
 
    from octo.plugin import OctoPlugin
@@ -93,9 +87,9 @@ does not matter, we'll simply call it ``HelloWorld``::
 
 Obviously, this is still lacking functionality to greet, so we'll need to
 add a method to our class for that.
-Looking at :class:`octo.plugin.OctoPlugin`, you can see it already
-offers :func:`octo.plugin.OctoPlugin.on_activation` and 
-:func:`octo.plugin.OctoPlugin.on_deactivation` for us to override. These two
+Looking at ``octo.plugin.OctoPlugin``, you can see it already
+offers ``octo.plugin.OctoPlugin.on_activation`` and 
+``octo.plugin.OctoPlugin.on_deactivation`` for us to override. These two
 methods are called on activation and deactivation of a plugin, respectively.
 
 Using this, we can complete our plugin as follows::
@@ -157,16 +151,8 @@ logging off as well, to make the output easier to read)::
 
 Success! You should now know enough to get started writing your own plugins.
 However, you'll probably want to spend a little more time looking at the API
-documentation of :class:`octo.plugin.OctoPlugin` first, so you know what
+documentation of ``octo.plugin.OctoPlugin`` first, so you know what
 other functionality you can hook into with your own plugins.
-
-API documentation
------------------
-
-.. toctree::
-   :maxdepth: 3
-
-   modules
 
 Contributing
 ------------
@@ -191,13 +177,26 @@ guidelines into consideration:
 License
 -------
 
-Octo is available under a :doc:`2-clause BSD license </license>` (the "Simplified
-BSD License").
+Octo is available under a 2-clause BSD license (the "Simplified BSD License")::
 
-Indices and tables
-------------------
+    Copyright (c) 2013, Nick Groenen
+    All rights reserved.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
