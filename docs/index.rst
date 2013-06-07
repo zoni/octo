@@ -168,7 +168,7 @@ Octo is an opensource project, so I would love your involvement. Please feel fre
 to offer suggestions or criticisms. If you wish to contribute code, I'd be more 
 than happy to integrate your changes if I feel they make a good addition. 
 
-In order to make the experience and smooth as possible, please take these
+In order to make the experience as smooth as possible, please take these
 guidelines into consideration:
 
 - Before submitting changes, make sure all tests still pass.
