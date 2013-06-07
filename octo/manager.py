@@ -6,21 +6,23 @@ from yapsy.PluginManager import PluginManager
 
 
 def exit_handler(signal, frame):
-	"""Called by `main` upon receiving SIGINT"""
+	"""Called by `run` upon receiving SIGINT"""
 	logging.info("Interrupt received, shutting down")
 	octo.manager.stop()
 
 
-def start(plugin_dirs=[], block=False):
+def run(plugin_dirs=[], block=False):
 	"""
-	Starts the ``octo`` application.
+	Runs the ``octo`` application.
 
 	Calling this function will initialize the `Manager` class and make it
 	available as `octo.instance` so that plugins may import and interact with
 	it.
 
 	If block=True, this function will block until a SIGINT is received, either
-	by the user hitting Ctrl+C or another process sending a SIGINT signal.
+	by the user hitting Ctrl+C or another process sending a SIGINT signal. If
+	block=False then applications must ensure to call stop() appropriately
+	themselves.
 	"""
 	if octo.instance is not None:
 		raise octo.exceptions.AlreadyStartedError("main() can only be called once")

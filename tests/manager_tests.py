@@ -107,42 +107,42 @@ class ManagerTests(unittest.TestCase):
 
 	def test_start_initializes_manager_stop_resets_instance(self, plugin_manager_mock):
 		self.assertEqual(octo.instance, None)
-		octo.start(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
 		octo.stop()
 		self.assertEqual(octo.instance, None)
 
 	def test_start_calls_instance_start(self, plugin_manager_mock):
 		with patch.object(octo.manager, 'Manager') as mock_method:
-			octo.start(plugin_dirs=[])
+			octo.run(plugin_dirs=[])
 		self.assertEqual(mock_method.mock_calls, [call(plugin_dirs=[]), call().start()])
 
 	def test_stop_calls_instance_stop(self, plugin_manager_mock):
-		octo.start(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
 		with patch.object(octo, 'instance') as mock_method:
 			octo.stop()
 		self.assertTrue(mock_method.stop.called)
 
 	@raises(octo.exceptions.AlreadyStartedError)
 	def test_start_raises_exception_when_called_twice(self, plugin_manager_mock):
-		octo.start(plugin_dirs=[])
-		octo.start(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
 
 	@patch('signal.signal')
 	@patch('signal.pause')
 	def test_start_can_block_until_sigint_received(self, pause_mock, signal_mock, plugin_manager_mock):
-		octo.start(plugin_dirs=[], block=True)
+		octo.run(plugin_dirs=[], block=True)
 		signal_mock.assert_called_with(signal.SIGINT, octo.manager.exit_handler)
 		self.assertTrue(pause_mock.called)
 
 	def test_stop_deletes_manager(self, plugin_manager_mock):
-		octo.start(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
 		octo.stop()
 		self.assertEqual(octo.instance, None)
 
 	def test_start_and_stop_sequence_with_plugins(self, plugin_manager_mock):
-		octo.start(plugin_dirs=[PLUGIN_DIR])
+		octo.run(plugin_dirs=[PLUGIN_DIR])
 		octo.stop()
 
 	@raises(octo.exceptions.NotStartedError)
@@ -151,7 +151,7 @@ class ManagerTests(unittest.TestCase):
 
 	@raises(octo.exceptions.NotStartedError)
 	def test_stop_raises_exception_when_called_twice(self, plugin_manager_mock):
-		octo.start(plugin_dirs=[])
+		octo.run(plugin_dirs=[])
 		octo.stop()
 		octo.stop()
 
