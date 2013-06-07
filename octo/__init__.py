@@ -29,4 +29,6 @@ __url__ = "http://octo.zoni.nl"
 
 from .manager import Manager, run, stop
 
+__all__ = ['exceptions', 'manager', 'plugin']
+
 instance = None
