@@ -11,14 +11,15 @@ from mock import patch, Mock, MagicMock, create_autospec, call
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
 
-def mockplugin(name="Mock plugin", enable=True):
+def mockplugin(name="Mock plugin", enable=True, omit_callback=False):
 	"""Create and return mock plugin"""
 	plugin = create_autospec(octo.plugin.OctoPlugin)
 	plugin.name = name
 	plugin.is_activated = False
 	plugin.details = {'Config': {}}
 	plugin.details['Config']['Enable'] = enable
-	plugin.callback = MagicMock(return_value="Called")
+	if not omit_callback:
+		plugin.callback = MagicMock(return_value="Called")
 	return plugin
 
 
@@ -26,7 +27,9 @@ class PluginManagerMock(Mock):
 	"""Fake PluginManager class which returns predefined mock plugin objects"""
 
 	def collectPlugins(self):
-		self.plugin_list = [mockplugin('Plugin 1'), mockplugin('Plugin 2', enable=False)]
+		self.plugin_list = [mockplugin('Plugin 0', omit_callback=True),
+		                    mockplugin('Plugin 1'),
+		                    mockplugin('Plugin 2', enable=False)]
 
 	def getAllPlugins(self):
 		return self.plugin_list
@@ -74,17 +77,17 @@ class ManagerTests(unittest.TestCase):
 		for plugin in manager.get_plugins().values():
 			if plugin.is_activated:
 				enabled += 1
-		self.assertEqual(enabled, 1)
+		self.assertEqual(enabled, 2)
 
-	def test_manager_get_plugins_returns_one_active(self, plugin_manager_mock):
+	def test_manager_get_plugins_returns_two_active(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 1)
+		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 2)
 
-	def test_manager_get_plugins_returns_two_total(self, plugin_manager_mock):
+	def test_manager_get_plugins_returns_three_total(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 2)
+		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 3)
 
 	def test_manager_get_plugins_returns_plugins_as_name_pluginobject_dict(self, plugin_manager_mock):
 		manager = octo.Manager()
@@ -97,14 +100,14 @@ class ManagerTests(unittest.TestCase):
 		manager = octo.Manager()
 		with patch.object(manager.plugin_manager, 'activatePluginByName') as mock_method:
 			manager.start()
-		self.assertEqual(mock_method.mock_calls, [call('Plugin 1')])
+		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 1'), call('Plugin 0')]))
 
 	def test_manager_stop_calls_deactivate(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
 		with patch.object(manager.plugin_manager, 'deactivatePluginByName') as mock_method:
 			manager.stop()
-		self.assertEqual(mock_method.mock_calls, [call('Plugin 1')])
+		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 1'), call('Plugin 0')]))
 
 	def test_start_initializes_manager_stop_resets_instance(self, plugin_manager_mock):
 		self.assertEqual(octo.instance, None)

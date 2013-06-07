@@ -100,8 +100,11 @@ class Manager(object):
 		"""
 		results = {}
 		for plugin in self.get_plugins().values():
-			logging.debug("Calling '{}' on plugin '{}'".format(func, plugin.name))
-			results[plugin.name] = getattr(plugin, func)(*args, **kwargs)
+			if hasattr(plugin, func):
+				logging.debug("Calling '{}' on plugin '{}'".format(func, plugin.name))
+				results[plugin.name] = getattr(plugin, func)(*args, **kwargs)
+			else:
+				logging.debug("Plugin '{}' does not have '{}'".format(plugin.name, func))
 		return results
 
 	def start(self):
