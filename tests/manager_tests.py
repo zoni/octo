@@ -18,6 +18,7 @@ def mockplugin(name="Mock plugin", enable=True):
 	plugin.is_activated = False
 	plugin.details = {'Config': {}}
 	plugin.details['Config']['Enable'] = enable
+	plugin.callback = MagicMock(return_value="Called")
 	return plugin
 
 
@@ -168,6 +169,18 @@ class ManagerTests(unittest.TestCase):
 		frame = MagicMock()
 		octo.manager.exit_handler(signal, frame)
 
+	def test_manager_call_calls_specified_function_on_active_plugins(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		manager.call('callback', args=[], kwargs={})
+		plugin1 = manager.get_plugins()['Plugin 1']
+		self.assertTrue(plugin1.callback.called)
+
+	def test_manager_call_returns_dict_with_results(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		result = manager.call('callback', args=[], kwargs={})
+		self.assertEqual(result, {'Plugin 1': "Called"})
 
 class ManagerIntegrationTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):

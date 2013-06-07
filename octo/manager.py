@@ -92,6 +92,18 @@ class Manager(object):
 		"""
 		self.plugin_manager.deactivatePluginByName(plugin_name)
 
+	def call(self, func, args, kwargs):
+		"""
+		Call the given function on all active plugins and return results as a dictionary
+
+		The returned dictionary will have the form of {'plugin name': <function_result>}
+		"""
+		results = {}
+		for plugin in self.get_plugins().values():
+			logging.debug("Calling '{}' on plugin '{}'".format(func, plugin.name))
+			results[plugin.name] = getattr(plugin, func)(*args, **kwargs)
+		return results
+
 	def start(self):
 		"""Start and activate collected plugins
 
