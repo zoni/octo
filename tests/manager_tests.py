@@ -6,7 +6,7 @@ import os
 import signal
 import yapsy
 from nose.tools import raises
-from mock import patch, Mock, create_autospec, call
+from mock import patch, Mock, MagicMock, create_autospec, call
 
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
@@ -155,6 +155,18 @@ class ManagerTests(unittest.TestCase):
 		octo.stop()
 		octo.stop()
 
+	@patch('octo.manager.stop')
+	def test_exit_handler_calls_stop(self, stop_mock, plugin_manager_mock):
+		signal = MagicMock()
+		frame = MagicMock()
+		octo.manager.exit_handler(signal, frame)
+		self.assertTrue(stop_mock.called)
+
+	@raises(octo.exceptions.NotStartedError)
+	def test_exit_handler_raises_error_when_called_while_no_instance_active(self, plugin_manager_mock):
+		signal = MagicMock()
+		frame = MagicMock()
+		octo.manager.exit_handler(signal, frame)
 
 class ManagerIntegrationTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):

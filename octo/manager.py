@@ -8,6 +8,7 @@ from yapsy.PluginManager import PluginManager
 def exit_handler(signal, frame):
 	"""Called by `main` upon receiving SIGINT"""
 	logging.info("Interrupt received, shutting down")
+	octo.manager.stop()
 
 
 def start(plugin_dirs=[], block=False):
