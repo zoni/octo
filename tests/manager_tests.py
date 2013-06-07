@@ -98,7 +98,7 @@ class ManagerTests(unittest.TestCase):
 			manager.start()
 		self.assertEqual(mock_method.mock_calls, [call('Plugin 1')])
 
-	def test_manager_start_calls_deactivate(self, plugin_manager_mock):
+	def test_manager_stop_calls_deactivate(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
 		with patch.object(manager.plugin_manager, 'deactivatePluginByName') as mock_method:
