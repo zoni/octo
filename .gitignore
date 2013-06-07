@@ -4,3 +4,5 @@ __pycache__
 /.idea
 /docs/_build
 /build
+/dist
+/MANIFEST
