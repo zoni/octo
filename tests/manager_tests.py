@@ -105,9 +105,23 @@ class ManagerTests(unittest.TestCase):
 			manager.stop()
 		self.assertEqual(mock_method.mock_calls, [call('Plugin 1')])
 
-	def test_start_initializes_manager(self, plugin_manager_mock):
+	def test_start_initializes_manager_stop_resets_instance(self, plugin_manager_mock):
+		self.assertEqual(octo.instance, None)
 		octo.start(plugin_dirs=[])
 		self.assertTrue(isinstance(octo.instance, octo.Manager))
+		octo.stop()
+		self.assertEqual(octo.instance, None)
+
+	def test_start_calls_instance_start(self, plugin_manager_mock):
+		with patch.object(octo.manager, 'Manager') as mock_method:
+			octo.start(plugin_dirs=[])
+		self.assertEqual(mock_method.mock_calls, [call(plugin_dirs=[]), call().start()])
+
+	def test_stop_calls_instance_stop(self, plugin_manager_mock):
+		octo.start(plugin_dirs=[])
+		with patch.object(octo, 'instance') as mock_method:
+			octo.stop()
+		self.assertTrue(mock_method.stop.called)
 
 	@raises(octo.exceptions.AlreadyStartedError)
 	def test_start_raises_exception_when_called_twice(self, plugin_manager_mock):
