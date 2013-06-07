@@ -87,8 +87,8 @@ does not matter, we'll simply call it ``HelloWorld``::
 Obviously, this is still lacking functionality to greet, so we'll need to
 add a method to our class for that.
 Looking at :class:`octo.plugin.OctoPlugin`, you can see it already
-offers :func:`octo.plugin.OctoPlugin.activate` and 
-:func:`octo.plugin.OctoPlugin.deactivate` for us to override. These two
+offers :func:`octo.plugin.OctoPlugin.on_activation` and 
+:func:`octo.plugin.OctoPlugin.on_deactivation` for us to override. These two
 methods are called on activation and deactivation of a plugin, respectively.
 
 Using this, we can complete our plugin as follows::
@@ -98,7 +98,7 @@ Using this, we can complete our plugin as follows::
    class HelloWorld(OctoPlugin):
        """Simple hello world example plugin"""
        
-       def activate(self):
+       def on_activation(self):
            """Say hello on plugin activation"""
            print("Hello world!")
 

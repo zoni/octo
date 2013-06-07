@@ -17,3 +17,13 @@ class OctoPluginTests(unittest.TestCase):
 		with patch.object(IPlugin, 'deactivate', return_value=None) as mock_method:
 			OctoPlugin().deactivate()
 		mock_method.assert_called_once_with()
+
+	def test_activate_calls_on_activation(self):
+		with patch.object(OctoPlugin, 'on_activation', return_value=None) as mock_method:
+			OctoPlugin().activate()
+		mock_method.assert_called_once_with()
+
+	def test_deactivate_calls_on_deactivation(self):
+		with patch.object(OctoPlugin, 'on_deactivation', return_value=None) as mock_method:
+			OctoPlugin().deactivate()
+		mock_method.assert_called_once_with()

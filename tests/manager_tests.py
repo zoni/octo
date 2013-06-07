@@ -168,6 +168,7 @@ class ManagerTests(unittest.TestCase):
 		frame = MagicMock()
 		octo.manager.exit_handler(signal, frame)
 
+
 class ManagerIntegrationTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
 		manager = octo.Manager().start()
