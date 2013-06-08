@@ -32,15 +32,14 @@ if __name__ == "__main__":
 	                    help="Log level to use. Valid values are NONE, "
 	                         "DEBUG, INFO, WARNING, ERROR and CRITICAL",
 	                    default="INFO")
-	parser.add_argument('-p', '--plugin-dir',
-	                    help="Directory from which to load plugins. This option "
-	                         "may be specified more than once in order to load "
-	                         "from multiple places.",
-	                    action='append')
+	parser.add_argument('plugin_dirs',
+	                    metavar='plugin-directory',
+	                    help="Directory from which to load plugins",
+	                    nargs='+')
 	args = parser.parse_args()
 
 	log_level = args.log_level.upper()
 	if log_level != "NONE":
 		logging.basicConfig(level=getattr(logging, log_level))
 
-	octo.run(plugin_dirs=args.plugin_dir, block=True)
+	octo.run(plugin_dirs=args.plugin_dirs, block=True)
