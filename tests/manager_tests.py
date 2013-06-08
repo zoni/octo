@@ -15,7 +15,7 @@ except ImportError:
 PLUGIN_DIR = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'plugins'])
 
 
-def mockplugin(name="Mock plugin", enable=True, omit_callback=False):
+def mockplugin(name="Mock plugin", enable=True, callback=None):
 	"""Create and return mock plugin"""
 	plugin = create_autospec(octo.plugin.OctoPlugin)
 	plugin.name = name
@@ -23,8 +23,8 @@ def mockplugin(name="Mock plugin", enable=True, omit_callback=False):
 	plugin.details = ConfigParser()
 	plugin.details.add_section('Config')
 	plugin.details.set('Config', 'Enable', str(enable))
-	if not omit_callback:
-		plugin.callback = MagicMock(return_value="Called")
+	if callback is not None:
+		plugin.callback = callback
 	return plugin
 
 
@@ -32,8 +32,8 @@ class PluginManagerMock(Mock):
 	"""Fake PluginManager class which returns predefined mock plugin objects"""
 
 	def collectPlugins(self):
-		self.plugin_list = [mockplugin('Plugin 0', omit_callback=True),
-		                    mockplugin('Plugin 1'),
+		self.plugin_list = [mockplugin('Plugin 0'),
+		                    mockplugin('Plugin 1', callback=MagicMock(return_value="Called")),
 		                    mockplugin('Plugin 2', enable=False)]
 
 	def getAllPlugins(self):
