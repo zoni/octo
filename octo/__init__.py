@@ -23,7 +23,7 @@
 """A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins."""
 
 __author__ = "Nick Groenen"
-__version__ = "0.1"
+__version__ = "0.2"
 __email__ = "zoni@zoni.nl"
 __url__ = "http://octo.zoni.nl"
 
