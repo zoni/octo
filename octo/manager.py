@@ -115,6 +115,7 @@ class Manager(object):
 
 		A plugin will be activated when it has a config item 'Enable'
 		under the section 'Config' with a value of True"""
+		logging.debug("Activating plugins")
 		for plugin in self.get_plugins(include_inactive=True).values():
 			try:
 				should_activate = plugin.details.getboolean('Config', 'Enable')
@@ -126,12 +127,15 @@ class Manager(object):
 			else:
 				logging.debug("Plugin {} not activated because config item Enable "
 							  "is not True".format(plugin.name))
+		logging.debug("Plugin activation done")
 		return self
 
 	def stop(self):
 		"""Stop and deactivate loaded plugins"""
+		logging.debug("Deactivating plugins")
 		for plugin in self.get_plugins().values():
 			logging.debug("Deactivating plugin {}".format(plugin.name))
 			self.deactivate_plugin(plugin.name)
+		logging.debug("Plugin deactivation done")
 		return self
 
