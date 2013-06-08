@@ -95,7 +95,7 @@ class Manager(object):
 		"""
 		self.plugin_manager.deactivatePluginByName(plugin_name)
 
-	def call(self, func, args, kwargs):
+	def call(self, func, args=[], kwargs={}):
 		"""
 		Call the given function on all active plugins and return results as a dictionary
 
@@ -103,11 +103,14 @@ class Manager(object):
 		"""
 		results = {}
 		for plugin in self.get_plugins().values():
-			if hasattr(plugin, func):
-				logging.debug("Calling '{}' on plugin '{}'".format(func, plugin.name))
-				results[plugin.name] = getattr(plugin, func)(*args, **kwargs)
-			else:
-				logging.debug("Plugin '{}' does not have '{}'".format(plugin.name, func))
+			try:
+				logging.debug("Calling {} on plugin '{}'".format(func, plugin.name))
+				results[plugin.name] = getattr(plugin.plugin_object, func)(*args, **kwargs)
+			except AttributeError as e:
+				logging.debug("'{}' has no attribute {}".format(plugin.name, func))
+			except Exception as e:
+				logging.exception("Exception while calling '{}' on '{}'".format(func, plugin.name))
+				results[plugin.name] = e
 		return results
 
 	def start(self):

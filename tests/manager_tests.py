@@ -23,8 +23,11 @@ def mockplugin(name="Mock plugin", enable=True, callback=None):
 	plugin.details = ConfigParser()
 	plugin.details.add_section('Config')
 	plugin.details.set('Config', 'Enable', str(enable))
-	if callback is not None:
-		plugin.callback = callback
+	plugin.plugin_object = MagicMock()
+	if callback is None:
+		del plugin.plugin_object.callback
+	else:
+		plugin.plugin_object.callback = callback
 	return plugin
 
 
@@ -34,7 +37,10 @@ class PluginManagerMock(Mock):
 	def collectPlugins(self):
 		self.plugin_list = [mockplugin('Plugin 0'),
 		                    mockplugin('Plugin 1', callback=MagicMock(return_value="Called")),
-		                    mockplugin('Plugin 2', enable=False)]
+		                    mockplugin('Plugin 2', enable=False),
+		                    mockplugin('Plugin 3', callback=lambda: Exception("Boom!")),
+		                    mockplugin('Plugin 4', callback=lambda *args, **kwargs: "{!r}\t{!r}".format(args, kwargs)),
+		                    mockplugin('Plugin 5', callback=lambda: "Called")]
 
 	def getAllPlugins(self):
 		return self.plugin_list
@@ -72,8 +78,6 @@ class PluginManagerMock(Mock):
 class ManagerTests(unittest.TestCase):
 	def setUp(self):
 		octo.instance = None
-		self.mock_plugin_list = [mockplugin('Plugin 1'),
-		                         mockplugin('Plugin 2', enable=False)]
 
 	def test_manager_enables_only_enabled_plugins(self, plugin_manager_mock):
 		manager = octo.Manager()
@@ -82,17 +86,17 @@ class ManagerTests(unittest.TestCase):
 		for plugin in manager.get_plugins().values():
 			if plugin.is_activated:
 				enabled += 1
-		self.assertEqual(enabled, 2)
+		self.assertEqual(enabled, 5)
 
-	def test_manager_get_plugins_returns_two_active(self, plugin_manager_mock):
+	def test_manager_get_plugins_returns_five_active(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 2)
+		self.assertEqual(len(manager.get_plugins(include_inactive=False)), 5)
 
-	def test_manager_get_plugins_returns_three_total(self, plugin_manager_mock):
+	def test_manager_get_plugins_returns_six_total(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 3)
+		self.assertEqual(len(manager.get_plugins(include_inactive=True)), 6)
 
 	def test_manager_get_plugins_returns_plugins_as_name_pluginobject_dict(self, plugin_manager_mock):
 		manager = octo.Manager()
@@ -105,14 +109,22 @@ class ManagerTests(unittest.TestCase):
 		manager = octo.Manager()
 		with patch.object(manager.plugin_manager, 'activatePluginByName') as mock_method:
 			manager.start()
-		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 1'), call('Plugin 0')]))
+		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 0'),
+		                                                         call('Plugin 1'),
+		                                                         call('Plugin 3'),
+		                                                         call('Plugin 4'),
+		                                                         call('Plugin 5')]))
 
 	def test_manager_stop_calls_deactivate(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
 		with patch.object(manager.plugin_manager, 'deactivatePluginByName') as mock_method:
 			manager.stop()
-		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 1'), call('Plugin 0')]))
+		self.assertEqual(sorted(mock_method.mock_calls), sorted([call('Plugin 0'),
+		                                                         call('Plugin 1'),
+		                                                         call('Plugin 3'),
+		                                                         call('Plugin 4'),
+		                                                         call('Plugin 5')]))
 
 	def test_start_initializes_manager_stop_resets_instance(self, plugin_manager_mock):
 		self.assertEqual(octo.instance, None)
@@ -182,13 +194,38 @@ class ManagerTests(unittest.TestCase):
 		manager.start()
 		manager.call('callback', args=[], kwargs={})
 		plugin1 = manager.get_plugins()['Plugin 1']
-		self.assertTrue(plugin1.callback.called)
+		self.assertTrue(plugin1.plugin_object.callback.called)
 
 	def test_manager_call_returns_dict_with_results(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		result = manager.call('callback', args=[], kwargs={})
-		self.assertEqual(result, {'Plugin 1': "Called"})
+		result = manager.call('callback')
+
+		self.assertEqual(len(result), 4)
+		self.assertEqual(result['Plugin 1'], "Called")
+		self.assertTrue(isinstance(result['Plugin 3'], Exception))
+
+	def test_manager_call_returns_exception_object_if_exception_occurred(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		result = manager.call('callback', kwargs={'one': 1, 'two': 2})
+		self.assertTrue(isinstance(result['Plugin 5'], TypeError))
+
+	def test_manager_call_passes_args_kwargs_correctly(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+
+		result = manager.call('callback', args=[1, 2, 3])
+		self.assertEqual(result['Plugin 4'], "(1, 2, 3)\t{}")
+
+		result = manager.call('callback', kwargs={'one': 1, 'two': 2})
+		# Dictionaries aren't sorted so the keys may be represented with 'one' first or 'two' first depending
+		# on various factors
+		self.assertTrue(result['Plugin 4'] in ("()\t{'one': 1, 'two': 2}", "()\t{'two': 2, 'one': 1}"))
+
+		result = manager.call('callback', args=[1, 2, 3], kwargs={'one': 1, 'two': 2})
+		self.assertTrue(result['Plugin 4'] in ("(1, 2, 3)\t{'one': 1, 'two': 2}", "(1, 2, 3)\t{'two': 2, 'one': 1}"))
+
 
 class ManagerIntegrationTests(unittest.TestCase):
 	def test_manager_has_no_plugins_when_pluginlist_empty(self):
