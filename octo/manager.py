@@ -95,6 +95,15 @@ class Manager(object):
 		"""
 		self.plugin_manager.deactivatePluginByName(plugin_name)
 
+	def call(self, plugin_name, func, args=[], kwargs={}):
+		"""
+		Call the given function on the given plugin object (specifed by plugin name)
+		"""
+		for plugin in self.get_plugins().values():
+			if plugin.name == plugin_name:
+				return getattr(plugin.plugin_object, func)(*args, **kwargs)
+		raise octo.exceptions.NoSuchPluginError("The specified plugin isn't active or doesn't exist")
+
 	def call_many(self, func, args=[], kwargs={}):
 		"""
 		Call the given function on all active plugins and return results as a dictionary

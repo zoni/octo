@@ -34,11 +34,14 @@ def mockplugin(name="Mock plugin", enable=True, callback=None):
 class PluginManagerMock(Mock):
 	"""Fake PluginManager class which returns predefined mock plugin objects"""
 
+	def raise_exception(self):
+		raise Exception("Boom!")
+
 	def collectPlugins(self):
 		self.plugin_list = [mockplugin('Plugin 0'),
 		                    mockplugin('Plugin 1', callback=MagicMock(return_value="Called")),
 		                    mockplugin('Plugin 2', enable=False),
-		                    mockplugin('Plugin 3', callback=lambda: Exception("Boom!")),
+		                    mockplugin('Plugin 3', callback=self.raise_exception),
 		                    mockplugin('Plugin 4', callback=lambda *args, **kwargs: "{!r}\t{!r}".format(args, kwargs)),
 		                    mockplugin('Plugin 5', callback=lambda: "Called")]
 
@@ -188,6 +191,49 @@ class ManagerTests(unittest.TestCase):
 		signal = MagicMock()
 		frame = MagicMock()
 		octo.manager.exit_handler(signal, frame)
+
+	def test_manager_call_calls_specified_function_on_specified_plugin(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		result = manager.call('Plugin 1', 'callback', args=[], kwargs={})
+		plugin1 = manager.get_plugins()['Plugin 1']
+		self.assertTrue(plugin1.plugin_object.callback.called)
+
+	def test_manager_call_returns_correct_results(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+
+		result = manager.call('Plugin 1', 'callback', args=[], kwargs={})
+		self.assertEqual(result, 'Called')
+
+		result = manager.call('Plugin 4', 'callback', args=[1, 2, 3])
+		self.assertEqual(result, "(1, 2, 3)\t{}")
+
+		result = manager.call('Plugin 4', 'callback', kwargs={'one': 1, 'two': 2})
+		# Dictionaries aren't sorted so the keys may be represented with 'one' first or 'two' first depending
+		# on various factors
+		self.assertTrue(result in ("()\t{'one': 1, 'two': 2}", "()\t{'two': 2, 'one': 1}"))
+
+		result = manager.call('Plugin 4', 'callback', args=[1, 2, 3], kwargs={'one': 1, 'two': 2})
+		self.assertTrue(result in ("(1, 2, 3)\t{'one': 1, 'two': 2}", "(1, 2, 3)\t{'two': 2, 'one': 1}"))
+
+	def test_manager_call_returns_exception_if_called_func_returns_exception(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		self.assertRaises(Exception, manager.call, args=['Plugin 3', 'callback'])
+		self.assertRaises(TypeError, manager.call, args=['Plugin 5', 'callback'], kwargs={'one': 1, 'two': 2})
+
+	@raises(AttributeError)
+	def test_manager_call_raises_exception_if_plugin_lacks_requested_function(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		manager.call('Plugin 0', 'callback', args=[], kwargs={})
+
+	@raises(octo.exceptions.NoSuchPluginError)
+	def test_manager_call_raises_exception_if_plugin_cannot_be_found(self, plugin_manager_mock):
+		manager = octo.Manager()
+		manager.start()
+		manager.call('No such plugin', 'callback', args=[], kwargs={})
 
 	def test_manager_call_many_calls_specified_function_on_active_plugins(self, plugin_manager_mock):
 		manager = octo.Manager()

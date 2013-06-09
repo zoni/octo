@@ -10,3 +10,8 @@ class NotStartedError(OctoException):
 class AlreadyStartedError(OctoException):
 	"""Raised when trying to call octo.start more than once"""
 	pass
+
+
+class NoSuchPluginError(OctoException):
+	"""Raised when an action is to be performed on a plugin that cannot be found"""
+	pass
