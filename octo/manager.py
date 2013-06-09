@@ -95,7 +95,7 @@ class Manager(object):
 		"""
 		self.plugin_manager.deactivatePluginByName(plugin_name)
 
-	def call(self, func, args=[], kwargs={}):
+	def call_many(self, func, args=[], kwargs={}):
 		"""
 		Call the given function on all active plugins and return results as a dictionary
 

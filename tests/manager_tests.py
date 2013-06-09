@@ -189,41 +189,41 @@ class ManagerTests(unittest.TestCase):
 		frame = MagicMock()
 		octo.manager.exit_handler(signal, frame)
 
-	def test_manager_call_calls_specified_function_on_active_plugins(self, plugin_manager_mock):
+	def test_manager_call_many_calls_specified_function_on_active_plugins(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		manager.call('callback', args=[], kwargs={})
+		manager.call_many('callback', args=[], kwargs={})
 		plugin1 = manager.get_plugins()['Plugin 1']
 		self.assertTrue(plugin1.plugin_object.callback.called)
 
-	def test_manager_call_returns_dict_with_results(self, plugin_manager_mock):
+	def test_manager_call_many_returns_dict_with_results(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		result = manager.call('callback')
+		result = manager.call_many('callback')
 
 		self.assertEqual(len(result), 4)
 		self.assertEqual(result['Plugin 1'], "Called")
 		self.assertTrue(isinstance(result['Plugin 3'], Exception))
 
-	def test_manager_call_returns_exception_object_if_exception_occurred(self, plugin_manager_mock):
+	def test_manager_call_many_returns_exception_object_if_exception_occurred(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
-		result = manager.call('callback', kwargs={'one': 1, 'two': 2})
+		result = manager.call_many('callback', kwargs={'one': 1, 'two': 2})
 		self.assertTrue(isinstance(result['Plugin 5'], TypeError))
 
-	def test_manager_call_passes_args_kwargs_correctly(self, plugin_manager_mock):
+	def test_manager_call_many_passes_args_kwargs_correctly(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()
 
-		result = manager.call('callback', args=[1, 2, 3])
+		result = manager.call_many('callback', args=[1, 2, 3])
 		self.assertEqual(result['Plugin 4'], "(1, 2, 3)\t{}")
 
-		result = manager.call('callback', kwargs={'one': 1, 'two': 2})
+		result = manager.call_many('callback', kwargs={'one': 1, 'two': 2})
 		# Dictionaries aren't sorted so the keys may be represented with 'one' first or 'two' first depending
 		# on various factors
 		self.assertTrue(result['Plugin 4'] in ("()\t{'one': 1, 'two': 2}", "()\t{'two': 2, 'one': 1}"))
 
-		result = manager.call('callback', args=[1, 2, 3], kwargs={'one': 1, 'two': 2})
+		result = manager.call_many('callback', args=[1, 2, 3], kwargs={'one': 1, 'two': 2})
 		self.assertTrue(result['Plugin 4'] in ("(1, 2, 3)\t{'one': 1, 'two': 2}", "(1, 2, 3)\t{'two': 2, 'one': 1}"))
 
 
