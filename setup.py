@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import octo
-from distutils.core import setup
+from setuptools import setup
 
 if __name__ == "__main__":
 	with open('README.rst') as file:
 		long_description = file.read()
 
-	setup(name='Octo',
+	setup(name='octo',
 	      version=octo.__version__,
 	      description=octo.__doc__,
 	      long_description=long_description,
@@ -28,4 +28,5 @@ if __name__ == "__main__":
 	      license="License :: OSI Approved :: BSD License",
 	      packages=['octo'],
 	      scripts=['octo.py'],
+	      install_requires=open('requirements.txt').readlines(),
 	     )
