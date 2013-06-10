@@ -111,7 +111,7 @@ Using this, we can complete our plugin as follows::
 
 If you now try to run octo, you'll notice  that nothing actually happens::
 
-    $ python octo.py -p example
+    $ python octo.py example
     INFO:root:Initializing with plugin directories: ['example']
     ^CINFO:root:Interrupt received, shutting down
     
@@ -152,7 +152,7 @@ especially useful if you end up sharing your plugin with other people.
 When we run octo again, this time we should see our greeting (we'll turn all
 logging off as well, to make the output easier to read)::
 
-    $ python octo.py -p example -l none
+    $ python octo.py -l none example
     Hello world!
 
 Success! You should now know enough to get started writing your own plugins.

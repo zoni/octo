@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>octo.manager &mdash; Octo 0.1 documentation</title>
+    <title>octo.manager &mdash; Octo 0.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="Octo 0.1 documentation" href="../../index.html" />
+    <link rel="top" title="Octo 0.2 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">Octo 0.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">Octo 0.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -55,23 +55,20 @@
 
 
 <div class="viewcode-block" id="exit_handler"><a class="viewcode-back" href="../../octo.html#octo.manager.exit_handler">[docs]</a><span class="k">def</span> <span class="nf">exit_handler</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;Called by `run` upon receiving SIGINT&quot;&quot;&quot;</span>
+	<span class="sd">&quot;&quot;&quot;Called by `main` upon receiving SIGINT&quot;&quot;&quot;</span>
 	<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Interrupt received, shutting down&quot;</span><span class="p">)</span>
-	<span class="n">octo</span><span class="o">.</span><span class="n">manager</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
 </div>
-<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../octo.html#octo.manager.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">plugin_dirs</span><span class="o">=</span><span class="p">[],</span> <span class="n">block</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="start"><a class="viewcode-back" href="../../octo.html#octo.manager.start">[docs]</a><span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="n">plugin_dirs</span><span class="o">=</span><span class="p">[],</span> <span class="n">block</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Runs the ``octo`` application.</span>
+<span class="sd">	Starts the ``octo`` application.</span>
 
 <span class="sd">	Calling this function will initialize the `Manager` class and make it</span>
 <span class="sd">	available as `octo.instance` so that plugins may import and interact with</span>
 <span class="sd">	it.</span>
 
 <span class="sd">	If block=True, this function will block until a SIGINT is received, either</span>
-<span class="sd">	by the user hitting Ctrl+C or another process sending a SIGINT signal. If</span>
-<span class="sd">	block=False then applications must ensure to call stop() appropriately</span>
-<span class="sd">	themselves.</span>
+<span class="sd">	by the user hitting Ctrl+C or another process sending a SIGINT signal.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">if</span> <span class="n">octo</span><span class="o">.</span><span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
 		<span class="k">raise</span> <span class="n">octo</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">AlreadyStartedError</span><span class="p">(</span><span class="s">&quot;main() can only be called once&quot;</span><span class="p">)</span>
@@ -141,21 +138,6 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">plugin_manager</span><span class="o">.</span><span class="n">deactivatePluginByName</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="Manager.call"><a class="viewcode-back" href="../../octo.html#octo.manager.Manager.call">[docs]</a>	<span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Call the given function on all active plugins and return results as a dictionary</span>
-
-<span class="sd">		The returned dictionary will have the form of {&#39;plugin name&#39;: &lt;function_result&gt;}</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="k">for</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugins</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-			<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
-				<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Calling &#39;{}&#39; on plugin &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-				<span class="n">results</span><span class="p">[</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin</span><span class="p">,</span> <span class="n">func</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Plugin &#39;{}&#39; does not have &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">))</span>
-		<span class="k">return</span> <span class="n">results</span>
-</div>
 <div class="viewcode-block" id="Manager.start"><a class="viewcode-back" href="../../octo.html#octo.manager.Manager.start">[docs]</a>	<span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Start and activate collected plugins</span>
 
@@ -213,7 +195,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">Octo 0.1 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">Octo 0.2 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

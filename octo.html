@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>octo Package &mdash; Octo 0.1 documentation</title>
+    <title>octo Package &mdash; Octo 0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1',
+        VERSION:     '0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Octo 0.1 documentation" href="index.html" />
+    <link rel="top" title="Octo 0.2 documentation" href="index.html" />
     <link rel="up" title="octo" href="modules.html" />
     <link rel="prev" title="octo" href="modules.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="modules.html" title="octo"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Octo 0.1 documentation</a> &raquo;</li>
+        <li><a href="index.html">Octo 0.2 documentation</a> &raquo;</li>
           <li><a href="modules.html" accesskey="U">octo</a> &raquo;</li> 
       </ul>
     </div>  
@@ -63,6 +63,13 @@
 <em class="property">exception </em><tt class="descclassname">octo.exceptions.</tt><tt class="descname">AlreadyStartedError</tt><a class="reference internal" href="_modules/octo/exceptions.html#AlreadyStartedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.exceptions.AlreadyStartedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#octo.exceptions.OctoException" title="octo.exceptions.OctoException"><tt class="xref py py-class docutils literal"><span class="pre">octo.exceptions.OctoException</span></tt></a></p>
 <p>Raised when trying to call octo.start more than once</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="octo.exceptions.NoSuchPluginError">
+<em class="property">exception </em><tt class="descclassname">octo.exceptions.</tt><tt class="descname">NoSuchPluginError</tt><a class="headerlink" href="#octo.exceptions.NoSuchPluginError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#octo.exceptions.OctoException" title="octo.exceptions.OctoException"><tt class="xref py py-class docutils literal"><span class="pre">octo.exceptions.OctoException</span></tt></a></p>
+<p>Raised when an action is to be performed on a plugin that cannot be found</p>
 </dd></dl>
 
 <dl class="exception">
@@ -98,7 +105,13 @@ so plugins may interact with it.</p>
 
 <dl class="method">
 <dt id="octo.manager.Manager.call">
-<tt class="descname">call</tt><big>(</big><em>func</em>, <em>args</em>, <em>kwargs</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#Manager.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.Manager.call" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">call</tt><big>(</big><em>plugin_name</em>, <em>func</em>, <em>args=</em><span class="optional">[</span><span class="optional">]</span>, <em>kwargs={}</em><big>)</big><a class="headerlink" href="#octo.manager.Manager.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the given function on the given plugin object (specifed by plugin name)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="octo.manager.Manager.call_many">
+<tt class="descname">call_many</tt><big>(</big><em>func</em>, <em>args=</em><span class="optional">[</span><span class="optional">]</span>, <em>kwargs={}</em><big>)</big><a class="headerlink" href="#octo.manager.Manager.call_many" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the given function on all active plugins and return results as a dictionary</p>
 <p>The returned dictionary will have the form of {&#8216;plugin name&#8217;: &lt;function_result&gt;}</p>
 </dd></dl>
@@ -144,7 +157,7 @@ under the section &#8216;Config&#8217; with a value of True</p>
 
 <dl class="function">
 <dt id="octo.manager.run">
-<tt class="descclassname">octo.manager.</tt><tt class="descname">run</tt><big>(</big><em>plugin_dirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>block=False</em><big>)</big><a class="reference internal" href="_modules/octo/manager.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.manager.run" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">octo.manager.</tt><tt class="descname">run</tt><big>(</big><em>plugin_dirs=</em><span class="optional">[</span><span class="optional">]</span>, <em>block=False</em><big>)</big><a class="headerlink" href="#octo.manager.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the <tt class="docutils literal"><span class="pre">octo</span></tt> application.</p>
 <p>Calling this function will initialize the <cite>Manager</cite> class and make it
 available as <cite>octo.instance</cite> so that plugins may import and interact with
@@ -187,14 +200,14 @@ method instead.</p>
 
 <dl class="method">
 <dt id="octo.plugin.OctoPlugin.on_activation">
-<tt class="descname">on_activation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.on_activation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.on_activation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">on_activation</tt><big>(</big><big>)</big><a class="headerlink" href="#octo.plugin.OctoPlugin.on_activation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this method to run code on plugin activation.</p>
 <p>This method may be safely overridden without calling Super.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="octo.plugin.OctoPlugin.on_deactivation">
-<tt class="descname">on_deactivation</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/octo/plugin.html#OctoPlugin.on_deactivation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#octo.plugin.OctoPlugin.on_deactivation" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">on_deactivation</tt><big>(</big><big>)</big><a class="headerlink" href="#octo.plugin.OctoPlugin.on_deactivation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override this method to run code on plugin deactivation.</p>
 <p>This method may be safely overridden without calling Super.</p>
 </dd></dl>
@@ -258,7 +271,7 @@ method instead.</p>
         <li class="right" >
           <a href="modules.html" title="octo"
              >previous</a> |</li>
-        <li><a href="index.html">Octo 0.1 documentation</a> &raquo;</li>
+        <li><a href="index.html">Octo 0.2 documentation</a> &raquo;</li>
           <li><a href="modules.html" >octo</a> &raquo;</li> 
       </ul>
     </div>
