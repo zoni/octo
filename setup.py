@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import octo
 from setuptools import setup
 
 if __name__ == "__main__":
@@ -8,12 +7,12 @@ if __name__ == "__main__":
 		long_description = file.read()
 
 	setup(name='octo',
-	      version=octo.__version__,
-	      description=octo.__doc__,
+	      version='0.2.3',
+	      description='A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins.',
 	      long_description=long_description,
-	      author=octo.__author__,
-	      author_email=octo.__email__,
-	      url=octo.__url__,
+	      author='Nick Groenen',
+	      author_email='zoni@zoni.nl',
+	      url='http://octo.zoni.nl',
 	      classifiers=[
 	          "Environment :: Plugins",
 	          "Topic :: Software Development :: Libraries :: Application Frameworks",
