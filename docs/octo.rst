@@ -9,6 +9,14 @@ octo Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`cli` Module
+-----------------
+
+.. automodule:: octo.cli
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`exceptions` Module
 ------------------------
 
