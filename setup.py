@@ -31,6 +31,7 @@ if __name__ == "__main__":
 	      ],
 	      license="License :: OSI Approved :: BSD License",
 	      packages=find_packages(),
+	      include_package_data=True,
 	      entry_points={
 	          'console_scripts': ['octo = octo.cli:main']
 	      },
