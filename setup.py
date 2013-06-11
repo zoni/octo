@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
+import os
 from setuptools import setup, find_packages
 
+root = os.path.dirname(os.path.realpath(__file__))
+
 if __name__ == "__main__":
-	with open('README.rst') as file:
+	with open(os.sep.join([root, 'README.rst'])) as file:
 		long_description = file.read()
-	with open('octo/version') as file:
+	with open(os.sep.join([root, 'octo', 'version'])) as file:
 		version = file.read().strip()
 
 	setup(name='octo',
@@ -31,5 +34,5 @@ if __name__ == "__main__":
 	      entry_points={
 	          'console_scripts': ['octo = octo.cli:main']
 	      },
-	      install_requires=open('requirements.txt').readlines(),
+	      install_requires=open(os.sep.join([root, 'requirements.txt'])).readlines(),
 	     )

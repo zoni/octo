@@ -22,7 +22,11 @@
 
 """A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins."""
 
-with open('version') as file:
+import os
+from .manager import Manager, run, stop
+
+version_file = os.sep.join([os.path.dirname(os.path.realpath(__file__)), 'version'])
+with open(version_file) as file:
 	version = file.read().strip()
 
 __author__ = "Nick Groenen"
@@ -30,7 +34,6 @@ __version__ = version
 __email__ = "zoni@zoni.nl"
 __url__ = "http://octo.zoni.nl"
 
-from .manager import Manager, run, stop
 
 __all__ = ['exceptions', 'manager', 'plugin']
 
