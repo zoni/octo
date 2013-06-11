@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 if __name__ == "__main__":
 	with open('README.rst') as file:
@@ -25,7 +25,9 @@ if __name__ == "__main__":
 	          "Topic :: Utilities",
 	      ],
 	      license="License :: OSI Approved :: BSD License",
-	      packages=['octo'],
-	      scripts=['octo.py'],
+	      packages=find_packages(),
+	      entry_points={
+	          'console_scripts': ['octo = octo.cli:main']
+	      },
 	      install_requires=open('requirements.txt').readlines(),
 	     )

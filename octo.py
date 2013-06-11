@@ -22,24 +22,15 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import logging
-import argparse
-import octo
+"""
+Octo CLI script for development.
+
+Packaged octo will not contain this file. Rather, setuptools will create a
+script itself (see entry_points in setup.py) which calls the same function
+that is called here.
+"""
+
+import octo.cli
 
 if __name__ == "__main__":
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-l', '--log-level',
-	                    help="Log level to use. Valid values are NONE, "
-	                         "DEBUG, INFO, WARNING, ERROR and CRITICAL",
-	                    default="INFO")
-	parser.add_argument('plugin_dirs',
-	                    metavar='plugin-directory',
-	                    help="Directory from which to load plugins",
-	                    nargs='+')
-	args = parser.parse_args()
-
-	log_level = args.log_level.upper()
-	if log_level != "NONE":
-		logging.basicConfig(level=getattr(logging, log_level))
-
-	octo.run(plugin_dirs=args.plugin_dirs, block=True)
+	octo.cli.main()
