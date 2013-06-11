@@ -5,9 +5,11 @@ from setuptools import setup, find_packages
 if __name__ == "__main__":
 	with open('README.rst') as file:
 		long_description = file.read()
+	with open('octo/version') as file:
+		version = file.read().strip()
 
 	setup(name='octo',
-	      version='0.2.3',
+	      version=version,
 	      description='A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins.',
 	      long_description=long_description,
 	      author='Nick Groenen',

@@ -22,8 +22,11 @@
 
 """A plugin framework which allows you to write your application as a collection of (optionally interconnected) plugins."""
 
+with open('version') as file:
+	version = file.read().strip()
+
 __author__ = "Nick Groenen"
-__version__ = "0.2.3"
+__version__ = version
 __email__ = "zoni@zoni.nl"
 __url__ = "http://octo.zoni.nl"
 
