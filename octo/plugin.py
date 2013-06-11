@@ -2,6 +2,10 @@ from yapsy.IPlugin import IPlugin
 
 
 class OctoPlugin(IPlugin):
+	def __init__(self):
+		self.plugin_object = None
+		super(OctoPlugin, self).__init__()
+
 	def activate(self):
 		"""
 		Run plugin initialization code.

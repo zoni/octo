@@ -62,6 +62,10 @@ class Manager(object):
 		self.plugin_manager = PluginManager(directories_list=plugin_dirs, plugin_info_ext='plugin')
 		self.plugin_manager.collectPlugins()
 
+		for plugin in self.get_plugins(include_inactive=True).values():
+			# Bind the plugin object so the plugin can refer to it via self
+			plugin.plugin_object.plugin_object = plugin
+
 	def get_plugins(self, include_inactive=False):
 		"""
 		Return a dictionary of loaded plugins

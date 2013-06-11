@@ -24,6 +24,7 @@ def mockplugin(name="Mock plugin", enable=True, callback=None):
 	plugin.details.add_section('Config')
 	plugin.details.set('Config', 'Enable', str(enable))
 	plugin.plugin_object = MagicMock()
+	plugin.plugin_object.plugin_object = None
 	if callback is None:
 		del plugin.plugin_object.callback
 	else:
@@ -90,6 +91,13 @@ class ManagerTests(unittest.TestCase):
 			if plugin.is_activated:
 				enabled += 1
 		self.assertEqual(enabled, 5)
+
+	def test_manager_adds_plugin_object_to_plugin_instance_on_init(self, plugin_manager_mock):
+		manager = octo.Manager()
+		plugin1 = manager.get_plugins(include_inactive=True)['Plugin 1']
+		self.assertEqual(plugin1.plugin_object.plugin_object, plugin1)
+		manager.start()
+		self.assertEqual(plugin1.plugin_object.plugin_object, plugin1)
 
 	def test_manager_get_plugins_returns_five_active(self, plugin_manager_mock):
 		manager = octo.Manager()
