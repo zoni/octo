@@ -4,6 +4,7 @@ from yapsy.IPlugin import IPlugin
 class OctoPlugin(IPlugin):
 	def __init__(self):
 		self.plugin_object = None
+		self.plugin_config = None
 		super(OctoPlugin, self).__init__()
 
 	def activate(self):

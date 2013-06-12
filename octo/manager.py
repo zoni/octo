@@ -65,6 +65,8 @@ class Manager(object):
 		for plugin in self.get_plugins(include_inactive=True).values():
 			# Bind the plugin object so the plugin can refer to it via self
 			plugin.plugin_object.plugin_object = plugin
+			# And bind it's configparser object separately as well for a cleaner API
+			plugin.plugin_object.plugin_config = plugin.details
 
 	def get_plugins(self, include_inactive=False):
 		"""

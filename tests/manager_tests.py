@@ -99,6 +99,13 @@ class ManagerTests(unittest.TestCase):
 		manager.start()
 		self.assertEqual(plugin1.plugin_object.plugin_object, plugin1)
 
+	def test_manager_adds_configparser_object_to_plugin_instance_on_init(self, plugin_manager_mock):
+		manager = octo.Manager()
+		plugin1 = manager.get_plugins(include_inactive=True)['Plugin 1']
+		self.assertTrue(isinstance(plugin1.plugin_object.plugin_config, ConfigParser))
+		manager.start()
+		self.assertTrue(isinstance(plugin1.plugin_object.plugin_config, ConfigParser))
+
 	def test_manager_get_plugins_returns_five_active(self, plugin_manager_mock):
 		manager = octo.Manager()
 		manager.start()

@@ -27,6 +27,10 @@ class OctoPluginTests(unittest.TestCase):
 		p = OctoPlugin()
 		self.assertEqual(p.plugin_object, None)
 
+	def test_init_sets_self_dot_plugin_config_as_none(self):
+		p = OctoPlugin()
+		self.assertEqual(p.plugin_config, None)
+
 	def test_activate_calls_on_activation(self):
 		with patch.object(OctoPlugin, 'on_activation', return_value=None) as mock_method:
 			OctoPlugin().activate()
