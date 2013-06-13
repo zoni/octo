@@ -116,7 +116,7 @@ metadata about our plugin.
 The plugin file
 ===============
 
-Lets create ``example/helloworld.plugin``::
+Lets create ``example/helloworld.octoplugin``::
 
     [Core]
     Name = Hello World
