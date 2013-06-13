@@ -46,13 +46,13 @@ Running octo
 Starting octo is as simple as running ``octo.py`` with a list of directories
 to scan for plugins::
 
-    python octo.py -p plugins
+    octo plugins
 
 Octo will scan the directory ``plugins`` recursively, loading any configured 
 plugins that it finds. If you have your plugins spread across more than a 
-single directory, you can give this option multiple times::
+single directory, you can supply multiple directories::
 
-    python octo.py -p plugins -p more_plugins
+    octo plugins more_plugins
 
 You can stop octo by pressing Ctrl+C, or by sending a SIGINT signal from another
 process (for example, kill).
